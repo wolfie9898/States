@@ -6,9 +6,10 @@ import {
   getMode,
   getStandardDeviation,
 } from "./Utils/Math";
+import "./Styles.css";
 
 function App() {
-  const [NewNumber, setNewNumber] = useState(0);
+  const [NewNumber, setNewNumber] = useState("");
   const [Numbers, setNumbers] = useState<number[]>([]);
   const [Loading, setLoading] = useState(false);
   const [Error, setError] = useState("");
@@ -46,16 +47,10 @@ function App() {
     setLoading(false);
   }, []);
 
-  if (Loading) {
-    return <div>Loading...</div>;
-  }
-  if (Error) {
-    return <div>{Error}</div>;
-  }
   const SubmitNewNumber = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     database.ref("numbers").push(NewNumber);
-    setNewNumber(0);
+    setNewNumber("");
   };
   const NewData = () => {
     // generate a list of random numbers
@@ -65,9 +60,16 @@ function App() {
       database.ref("numbers").push(number);
     });
   };
+
+  if (Loading) {
+    return <div>Loading...</div>;
+  }
+  if (Error) {
+    return <div>{Error}</div>;
+  }
   return (
     <div>
-      <h1>Statistics</h1>
+      <h1 className="heading">Statistics</h1>
       {Numbers.length > 0 && (
         <ul>
           <li>
