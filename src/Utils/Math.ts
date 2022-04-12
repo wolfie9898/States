@@ -25,11 +25,23 @@ export const generateStatistics = (numbers: number[]) => {
 
   return { mean, standardDeviation, mode, median };
 };
-// const mode = numbers
-//     .sort((a: any, b: any) => a - b)
-//     .filter((number: number, index: number, array: any) => {
-//       return (
-//         array.indexOf(number) === index &&
-//         array.indexOf(number) === array.lastIndexOf(number)
-//       );
-//     });
+
+export const getMedian = (numbers: number[]) => {
+  return numbers.sort((a, b) => a - b)[Math.floor(numbers.length / 2)];
+};
+export const getMode = (numbers: number[]) => {
+  const mode = numbers.reduce(
+    (a, b) => {
+      const count = numbers.filter((x) => x === b).length;
+      return count > a.count ? { count, value: b } : a;
+    },
+    { count: 0, value: 0 }
+  );
+  return mode.value;
+};
+export const getStandardDeviation = (numbers: number[], meanValue: number) => {
+  const variance =
+    numbers.reduce((a, b) => a + Math.pow(b - meanValue, 2), 0) /
+    numbers.length;
+  return Math.sqrt(variance);
+};
