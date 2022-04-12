@@ -1,3 +1,58 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+.bg-base-100 {
+  color: #000;
+  background-color: #fff;
+}
+.bg-base-200 {
+  color: #413c3c;
+  background-color: #f7fafc;
+}
+.bg-base-300 {
+  color: #575151;
+  background-color: #edf2f7;
+}
+.bg-base-400 {
+  color: #6c6b6b;
+  background-color: #e2e8f0;
+}
+@media (prefers-color-scheme: dark) {
+  .bg-base-100 {
+    color: #fff;
+    background-color: #363c41;
+  }
+  .bg-base-200 {
+    color: #fff;
+    background-color: #262b31;
+  }
+  .bg-base-300 {
+    color: #fff;
+    background-color: #0e1316;
+  }
+  .bg-base-400 {
+    color: #fff;
+    background-color: #000000;
+  }
+}
+
+.tile {
+  color: #fff;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.2rem;
+  padding: 2em;
+
+  border-radius: 10px;
+}

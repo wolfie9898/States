@@ -43,8 +43,9 @@ function App() {
       });
     } catch (error: any) {
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const SubmitNewNumber = (event: React.FormEvent<HTMLFormElement>) => {
@@ -60,7 +61,7 @@ function App() {
       database.ref("numbers").push(number);
     });
   };
-
+  console.log(Loading);
   if (Loading) {
     return <div>Loading...</div>;
   }
@@ -68,38 +69,48 @@ function App() {
     return <div>{Error}</div>;
   }
   return (
-    <div>
-      <h1 className="heading">Statistics</h1>
+    <div className="bg-base-300 h-screen py-5">
+      <h1 className="text-6xl text-center">Statistics</h1>
       {Numbers.length > 0 && (
-        <ul>
-          <li>
+        <ul className="container  flex flex-col md:flex-row bg-base-200 p-10 justify-center mt-5 gap-5">
+          <li className="tile bg-base-100 ">
             <strong>Mean:</strong> {MathData.mean}
           </li>
-          <li>
+          <li className="tile bg-base-100">
             <strong>Median:</strong> {MathData.median}
           </li>
-          <li>
+          <li className="tile bg-base-100">
             <strong>Mode:</strong> {MathData.mode}
           </li>
-          <li>
+          <li className="tile bg-base-100">
             <strong>Standard Deviation:</strong> {MathData.standardDeviation}
           </li>
         </ul>
       )}
-
-      <form onSubmit={SubmitNewNumber}>
-        <label>Add Number:</label>
-
-        <input
-          value={NewNumber}
-          type="number"
-          onChange={(e: any) => setNewNumber(e.target.value)}
-        />
-        <button>Add Number</button>
-      </form>
-      <button onClick={NewData}>
-        Load <code>numbers</code> to Firebase
-      </button>
+      <div className="mx-28 mt-10 flex flex-col md:flex-row justify-around">
+        <form onSubmit={SubmitNewNumber}>
+          <div className="p-5 bg-slate-500 rounded-xl text-gray-300 flex flex-col">
+            <label className="uppercase mb-1">New Number:</label>
+            <input
+              value={NewNumber}
+              type="number"
+              className="px-5 py-3 text-black"
+              onChange={(e: any) => setNewNumber(e.target.value)}
+            />
+          </div>
+          <button className="bg-base-100 p-5 rounded-xl mt-5 ">
+            Add Number
+          </button>
+        </form>
+        <div className="flex justify-center">
+          <button
+            className="bg-base-400 p-10 text-3xl rounded-xl "
+            onClick={NewData}
+          >
+            Load <code>numbers</code> to Firebase
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
