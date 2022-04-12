@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import { database } from "./FirebaseConfig";
-import { getMedian, getMode, getStandardDeviation } from "./Utils/Math";
+import {
+  generateRandomNumbers,
+  getMedian,
+  getMode,
+  getStandardDeviation,
+} from "./Utils/Math";
 
 function App() {
+  const [NewNumber, setNewNumber] = useState(0);
   const [Numbers, setNumbers] = useState<number[]>([]);
   const [Loading, setLoading] = useState(false);
   const [Error, setError] = useState("");
@@ -23,7 +29,9 @@ function App() {
         });
         setNumbers(numbers);
         if (numbers.length > 0) {
-          const meanValue = numbers.reduce((a, b) => a + b) / numbers.length;
+          const meanValue = parseInt(
+            (numbers.reduce((a, b) => a + b) / numbers.length).toFixed(2)
+          );
           setMathData({
             mean: meanValue,
             median: getMedian(numbers),
@@ -44,30 +52,52 @@ function App() {
   if (Error) {
     return <div>{Error}</div>;
   }
-  if (Numbers.length === 0) {
-    return (
-      <div>
-        <h1>No Numbers</h1>
-      </div>
-    );
-  }
+  const SubmitNewNumber = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    database.ref("numbers").push(NewNumber);
+    setNewNumber(0);
+  };
+  const NewData = () => {
+    // generate a list of random numbers
+    const numbers = generateRandomNumbers();
+    // push the numbers to firebase
+    numbers.forEach((number) => {
+      database.ref("numbers").push(number);
+    });
+  };
   return (
     <div>
       <h1>Statistics</h1>
-      <ul>
-        <li>
-          <strong>Mean:</strong> {MathData.mean}
-        </li>
-        <li>
-          <strong>Median:</strong> {MathData.median}
-        </li>
-        <li>
-          <strong>Mode:</strong> {MathData.mode}
-        </li>
-        <li>
-          <strong>Standard Deviation:</strong> {MathData.standardDeviation}
-        </li>
-      </ul>
+      {Numbers.length > 0 && (
+        <ul>
+          <li>
+            <strong>Mean:</strong> {MathData.mean}
+          </li>
+          <li>
+            <strong>Median:</strong> {MathData.median}
+          </li>
+          <li>
+            <strong>Mode:</strong> {MathData.mode}
+          </li>
+          <li>
+            <strong>Standard Deviation:</strong> {MathData.standardDeviation}
+          </li>
+        </ul>
+      )}
+
+      <form onSubmit={SubmitNewNumber}>
+        <label>Add Number:</label>
+
+        <input
+          value={NewNumber}
+          type="number"
+          onChange={(e: any) => setNewNumber(e.target.value)}
+        />
+        <button>Add Number</button>
+      </form>
+      <button onClick={NewData}>
+        Load <code>numbers</code> to Firebase
+      </button>
     </div>
   );
 }
